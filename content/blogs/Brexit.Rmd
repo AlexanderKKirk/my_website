@@ -1,0 +1,52 @@
+---
+categories:
+- ""
+- ""
+date: "2017-10-31T22:26:09-05:00"
+description: "Predicting Leave Share with Demographics"
+draft: false
+image: pic09.jpg
+keywords: ""
+slug: Brexit
+title: Brexit
+---
+```{r load-libraries, warning=FALSE, message=FALSE, echo=FALSE}
+library(tidyverse)
+library(gapminder)
+library(here)
+```
+We will now have a quick look at the results of the 2016 Brexit vote in the UK. First, we read the data using read_csv() and have a quick glimpse at it.
+```{r load_brexit_data, warning=FALSE, message=FALSE}
+brexit_results <- read_csv(here::here("Data","brexit_results.csv"))
+glimpse(brexit_results)
+```
+
+Our main outcome variable is leave_share, which is the percent of votes cast in favour of Brexit, or leaving the EU. Each row is a UK parliament constituency 
+
+To get a sense of the spread of the data, I plotted a histogram and a density plot of the leave share in all constituencies.
+```{r brexit_histogram, warning=FALSE, message=FALSE}
+ggplot(brexit_results, aes(x = leave_share)) +
+  geom_histogram(binwidth = 2.5) + 
+  labs(title = "Constituencies by Leave Share", subtitle = "Histogram", x = "Leave Share", y = "Number of Constituencies")
+ggplot(brexit_results, aes(x = leave_share)) +
+  geom_density() + 
+  labs(title = "Constituencies by Leave Share", subtitle = "Density Plot", x = "Leave Share", y = "Density")
+```
+
+One common explanation for the Brexit outcome was fear of immigration and opposition to the EU's more open border policy. I can check the relationship between the proportion of native born residents, born_in_uk, in a constituency and its leave_share. To do this, I get the correlation between the two variables
+```{r brexit_immigration_correlation}
+brexit_results %>% 
+  select(leave_share, born_in_uk) %>% 
+  cor()
+```
+The correlation is almost 0.5, which shows that the two variables are positively correlated. 
+
+I can also create a scatterplot between these two variables using geom_point. I also added the best fit line, using  geom_smooth(method = "lm").
+```{r brexit_immigration_plot}
+ggplot(brexit_results, aes(x = born_in_uk, y = leave_share)) +
+  geom_point(alpha=0.3) +
+  geom_smooth(method = "lm") +
+  theme_bw() + labs(title = "Native Britons Fuel Brexit", subtitle = "Share Born in UK versus Leave Share", x = "Share Born in UK", y = "Leave Share")
+```
+
+Most interesting to me is the number of constituencies in the block with more than 95% native Britons that did not provide a majority of their votes to leave. While still clearly outnumbered by those heavily native constituencies voting leave, the share that voted to remain is certainly significant. An interesting inclusion to the data would be information of income or level of education, both of which may help predict the way that constituencies voted. Furthermore, much like in Task 2 where we colored the data by country, coloring by region could provide some intriguing insights, especially if leave voters are concentrated in post-industrial regions and remain voters in the prosperous Southeast and Scotland. A final note is the absence of any constituencies where the majority of residents are native born and the majority of votes went for leave, located in the top left corner of the plot. This tends to imply that non-native residents are much easier to predict the voting patterns of than native residents, as almost every data point falls below the point where leave share is equal to native born share. 

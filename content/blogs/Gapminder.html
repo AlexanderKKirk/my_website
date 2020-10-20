@@ -60,8 +60,8 @@ continent_data &lt;- gapminder %&gt;%
   NULL 
 plot1</code></pre>
 <pre><code>## `geom_smooth()` using method = &#39;loess&#39; and formula &#39;y ~ x&#39;</code></pre>
-<p><img src="/blogs/Gapminder_files/figure-html/lifeExp_one_country-1.png" width="672" />
-Next, I added a title.</p>
+<p><img src="/blogs/Gapminder_files/figure-html/lifeExp_one_country-1.png" width="672" /></p>
+<p>Next, I added a title.</p>
 <pre class="r"><code>plot1 &lt;- ggplot(data = country_data, mapping = aes(x = year, y = lifeExp)) + 
   geom_point() + 
   geom_smooth(se = FALSE) + 
@@ -70,16 +70,16 @@ Next, I added a title.</p>
   NULL
 plot1</code></pre>
 <pre><code>## `geom_smooth()` using method = &#39;loess&#39; and formula &#39;y ~ x&#39;</code></pre>
-<p><img src="/blogs/Gapminder_files/figure-html/lifeExp_one_country_with_label-1.png" width="672" />
-Thirdly, I produced a plot for all countries in the Americas.</p>
+<p><img src="/blogs/Gapminder_files/figure-html/lifeExp_one_country_with_label-1.png" width="672" /></p>
+<p>Thirdly, I produced a plot for all countries in the Americas.</p>
 <pre class="r"><code>ggplot(data =  continent_data, mapping = aes(x =  year, y = lifeExp, colour = country)) + 
   geom_point() + 
   geom_smooth(se = FALSE) + 
   theme_bw() +
   NULL</code></pre>
 <pre><code>## `geom_smooth()` using method = &#39;loess&#39; and formula &#39;y ~ x&#39;</code></pre>
-<p><img src="/blogs/Gapminder_files/figure-html/lifeExp_one_continent-1.png" width="672" />
-Finally, using the original gapminder data, I produced a life expectancy over time graph, grouped by continent.</p>
+<p><img src="/blogs/Gapminder_files/figure-html/lifeExp_one_continent-1.png" width="672" /></p>
+<p>Finally, using the original gapminder data, I produced a life expectancy over time graph, grouped by continent.</p>
 <pre class="r"><code>ggplot(data = gapminder , mapping = aes(x = year, y = lifeExp, colour = country)) + 
   geom_point() +  
   geom_smooth(se = FALSE) + 
@@ -88,5 +88,5 @@ Finally, using the original gapminder data, I produced a life expectancy over ti
   theme(legend.position=&quot;none&quot;) + 
   NULL</code></pre>
 <pre><code>## `geom_smooth()` using method = &#39;loess&#39; and formula &#39;y ~ x&#39;</code></pre>
-<p><img src="/blogs/Gapminder_files/figure-html/lifeExp_facet_by_continent-1.png" width="672" />
-In general, life expectancy has improved worldwide in the 55 years covered in the data, with a few particular exceptions. Especially in Africa, but also in Asia and the Americas, a few countries experienced severe decreases in their life expectancy that could likely be contributed to a small handful of factors. Many parts of Africa, for example, experienced wars of many varieties during the late 20th century, whether they be revolutions, civil wars, coups, or insurgencies. The same could be said for a similar dip in one country in Asia in the 1970s. Without knowing for sure, I would say that country is Vietnam as it was torn apart by the Vietnam War. There is also a much more gradual curve to one country in the Americas that does not fit the sharp decline seen during warfare. This is a much more difficult label to pin down as gradual social deterioration could apply to many countries in the Western hemisphere, including Venezuela, El Salvador, Honduras, Panama, Colombia, or Nicaragua just to name a few.</p>
+<p><img src="/blogs/Gapminder_files/figure-html/lifeExp_facet_by_continent-1.png" width="672" /></p>
+<p>In general, life expectancy has improved worldwide in the 55 years covered in the data, with a few particular exceptions. Especially in Africa, but also in Asia and the Americas, a few countries experienced severe decreases in their life expectancy that could likely be contributed to a small handful of factors. Many parts of Africa, for example, experienced wars of many varieties during the late 20th century, whether they be revolutions, civil wars, coups, or insurgencies. The same could be said for a similar dip in one country in Asia in the 1970s. Without knowing for sure, I would say that country is Vietnam as it was torn apart by the Vietnam War. There is also a much more gradual curve to one country in the Americas that does not fit the sharp decline seen during warfare. This is a much more difficult label to pin down as gradual social deterioration could apply to many countries in the Western hemisphere, including Venezuela, El Salvador, Honduras, Panama, Colombia, or Nicaragua just to name a few.</p>

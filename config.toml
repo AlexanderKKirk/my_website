@@ -98,34 +98,34 @@ disqusShortname = ""
       url = "blogs/Gapminder"
 
     [[params.tiles.showcase]]
-      title = "Tempus"
-      subtitle = "Feugiat Amet Tempus"
+      title = "Brexit"
+      subtitle = "Predicting Leave Share with Demographics"
       image = "pic02.jpg"
-      url = "blogs/tempus"
+      url = "blogs/Brexit"
 
     [[params.tiles.showcase]]
-      title = "Magna"
-      subtitle = "Lorem Etiam Nullam"
-      image = "pic03.jpg"
-      url = "blogs/magna"
+#      title = "Magna"
+#      subtitle = "Lorem Etiam Nullam"
+#      image = "pic03.jpg"
+#      url = "blogs/magna"
 
     [[params.tiles.showcase]]
-      title = "Ipsum"
-      subtitle = "Nisl Sed Aliquam"
-      image = "pic04.jpg"
-      url = "blogs/ipsum"
+#      title = "Ipsum"
+#      subtitle = "Nisl Sed Aliquam"
+#      image = "pic04.jpg"
+#      url = "blogs/ipsum"
 
     [[params.tiles.showcase]]
-      title = "Consequat"
-      subtitle = "Ipsum Dolor Sit Amet"
-      image = "pic05.jpg"
-      url = "blogs/ipsum"
+#      title = "Consequat"
+#      subtitle = "Ipsum Dolor Sit Amet"
+#      image = "pic05.jpg"
+#      url = "blogs/ipsum"
 
     [[params.tiles.showcase]]
-      title = "Etiam"
-      subtitle = "Feugiat Amet Tempus"
-      image = "pic06.jpg"
-      url = "blogs/ipsum"
+#      title = "Etiam"
+#      subtitle = "Feugiat Amet Tempus"
+#      image = "pic06.jpg"
+#      url = "blogs/ipsum"
     # You can make more showcases by copy and pasting the code above
 
   [params.blog]
@@ -150,7 +150,7 @@ disqusShortname = ""
     the latter on the relationship between shareholder returns and corporate social responsibility for America's largest corporations. Now, I have 
     arrived at London Business School for my Masters in Financial Analysis and to prepare for whatever comes next."""
     buttonText = "Get Started"
-    url = "blogs"
+    url = "blogs/CV copy"
 
 
   # Contact section

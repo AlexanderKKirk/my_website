@@ -1,0 +1,92 @@
+---
+categories:
+- ""
+- ""
+date: "2017-10-31T21:28:43-05:00"
+description: "Exploring GDP and Life Expectancy"
+draft: false
+image: pic10.jpg
+keywords: ""
+slug: Gapminder
+title: Gapminder
+---
+
+
+
+<p>Here is a look at the first 20 rows of data in the gapminder dataset, which shows life expectancy, population, and GDP per capita for 142 countries from 1952 to 2007.</p>
+<pre class="r"><code>glimpse(gapminder)</code></pre>
+<pre><code>## Rows: 1,704
+## Columns: 6
+## $ country   &lt;fct&gt; Afghanistan, Afghanistan, Afghanistan, Afghanistan, Afghani…
+## $ continent &lt;fct&gt; Asia, Asia, Asia, Asia, Asia, Asia, Asia, Asia, Asia, Asia,…
+## $ year      &lt;int&gt; 1952, 1957, 1962, 1967, 1972, 1977, 1982, 1987, 1992, 1997,…
+## $ lifeExp   &lt;dbl&gt; 28.801, 30.332, 31.997, 34.020, 36.088, 38.438, 39.854, 40.…
+## $ pop       &lt;int&gt; 8425333, 9240934, 10267083, 11537966, 13079460, 14880372, 1…
+## $ gdpPercap &lt;dbl&gt; 779.4453, 820.8530, 853.1007, 836.1971, 739.9811, 786.1134,…</code></pre>
+<pre class="r"><code>head(gapminder, 20)</code></pre>
+<pre><code>## # A tibble: 20 x 6
+##    country     continent  year lifeExp      pop gdpPercap
+##    &lt;fct&gt;       &lt;fct&gt;     &lt;int&gt;   &lt;dbl&gt;    &lt;int&gt;     &lt;dbl&gt;
+##  1 Afghanistan Asia       1952    28.8  8425333      779.
+##  2 Afghanistan Asia       1957    30.3  9240934      821.
+##  3 Afghanistan Asia       1962    32.0 10267083      853.
+##  4 Afghanistan Asia       1967    34.0 11537966      836.
+##  5 Afghanistan Asia       1972    36.1 13079460      740.
+##  6 Afghanistan Asia       1977    38.4 14880372      786.
+##  7 Afghanistan Asia       1982    39.9 12881816      978.
+##  8 Afghanistan Asia       1987    40.8 13867957      852.
+##  9 Afghanistan Asia       1992    41.7 16317921      649.
+## 10 Afghanistan Asia       1997    41.8 22227415      635.
+## 11 Afghanistan Asia       2002    42.1 25268405      727.
+## 12 Afghanistan Asia       2007    43.8 31889923      975.
+## 13 Albania     Europe     1952    55.2  1282697     1601.
+## 14 Albania     Europe     1957    59.3  1476505     1942.
+## 15 Albania     Europe     1962    64.8  1728137     2313.
+## 16 Albania     Europe     1967    66.2  1984060     2760.
+## 17 Albania     Europe     1972    67.7  2263554     3313.
+## 18 Albania     Europe     1977    68.9  2509048     3533.
+## 19 Albania     Europe     1982    70.4  2780097     3631.
+## 20 Albania     Europe     1987    72    3075321     3739.</code></pre>
+<p>I have created the <code>country_data</code> and <code>continent_data</code> for the country and continent from which I am from with the code below</p>
+<pre class="r"><code>country_data &lt;- gapminder %&gt;% 
+            filter(country == &quot;United States&quot;)
+continent_data &lt;- gapminder %&gt;% 
+            filter(continent == &quot;Americas&quot;)</code></pre>
+<p>First, I created a plot of life expectancy over time for the United States.</p>
+<pre class="r"><code>plot1 &lt;- ggplot(data = country_data, mapping = aes(x = year, y = lifeExp)) + 
+  geom_point() +
+  geom_smooth(se = FALSE) + 
+  theme_bw() +
+  NULL 
+plot1</code></pre>
+<pre><code>## `geom_smooth()` using method = &#39;loess&#39; and formula &#39;y ~ x&#39;</code></pre>
+<p><img src="/blogs/Gapminder_files/figure-html/lifeExp_one_country-1.png" width="672" />
+Next, I added a title.</p>
+<pre class="r"><code>plot1 &lt;- ggplot(data = country_data, mapping = aes(x = year, y = lifeExp)) + 
+  geom_point() + 
+  geom_smooth(se = FALSE) + 
+  labs(title = &quot;United States Life Expectancy&quot;, x = &quot;Year&quot;, y = &quot;Years of Age&quot;) + 
+  theme_bw() +
+  NULL
+plot1</code></pre>
+<pre><code>## `geom_smooth()` using method = &#39;loess&#39; and formula &#39;y ~ x&#39;</code></pre>
+<p><img src="/blogs/Gapminder_files/figure-html/lifeExp_one_country_with_label-1.png" width="672" />
+Thirdly, I produced a plot for all countries in the Americas.</p>
+<pre class="r"><code>ggplot(data =  continent_data, mapping = aes(x =  year, y = lifeExp, colour = country)) + 
+  geom_point() + 
+  geom_smooth(se = FALSE) + 
+  theme_bw() +
+  NULL</code></pre>
+<pre><code>## `geom_smooth()` using method = &#39;loess&#39; and formula &#39;y ~ x&#39;</code></pre>
+<p><img src="/blogs/Gapminder_files/figure-html/lifeExp_one_continent-1.png" width="672" />
+Finally, using the original gapminder data, I produced a life expectancy over time graph, grouped by continent.</p>
+<pre class="r"><code>ggplot(data = gapminder , mapping = aes(x = year, y = lifeExp, colour = country)) + 
+  geom_point() +  
+  geom_smooth(se = FALSE) + 
+  facet_wrap(~continent) + 
+  theme_bw() +
+  theme(legend.position=&quot;none&quot;) + 
+  NULL</code></pre>
+<pre><code>## `geom_smooth()` using method = &#39;loess&#39; and formula &#39;y ~ x&#39;</code></pre>
+<p><img src="/blogs/Gapminder_files/figure-html/lifeExp_facet_by_continent-1.png" width="672" />
+In general, life expectancy has improved worldwide in the 55 years covered in the data, with a few particular exceptions. Especially in Africa, but also in Asia and the Americas, a few countries experienced severe decreases in their life expectancy that could likely be contributed to a small handful of factors. Many parts of Africa, for example, experienced wars of many varieties during the late 20th century, whether they be revolutions, civil wars, coups, or insurgencies. The same could be said for a similar dip in one country in Asia in the 1970s. Without knowing for sure, I would say that country is Vietnam as it was torn apart by the Vietnam War. There is also a much more gradual curve to one country in the Americas that does not fit the sharp decline seen during warfare. This is a much more difficult label to pin down as gradual social deterioration could apply to many countries in the Western hemisphere, including Venezuela, El Salvador, Honduras, Panama, Colombia, or Nicaragua just to name a few.</p>

@@ -95,7 +95,7 @@ disqusShortname = ""
       title = "Gapminder"
       subtitle = "Exploring GDP and Life Expectancy"
       image = "pic01.jpg"
-      url = "blogs/blog1"
+      url = "blogs/Gapminder"
 
     [[params.tiles.showcase]]
       title = "Tempus"

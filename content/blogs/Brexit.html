@@ -1,0 +1,57 @@
+---
+categories:
+- ""
+- ""
+date: "2017-10-31T22:26:09-05:00"
+description: "Predicting Leave Share with Demographics"
+draft: false
+image: pic09.jpg
+keywords: ""
+slug: Brexit
+title: Brexit
+---
+
+
+
+<p>We will now have a quick look at the results of the 2016 Brexit vote in the UK. First, we read the data using read_csv() and have a quick glimpse at it.</p>
+<pre class="r"><code>brexit_results &lt;- read_csv(here::here(&quot;Data&quot;,&quot;brexit_results.csv&quot;))
+glimpse(brexit_results)</code></pre>
+<pre><code>## Rows: 632
+## Columns: 11
+## $ Seat        &lt;chr&gt; &quot;Aldershot&quot;, &quot;Aldridge-Brownhills&quot;, &quot;Altrincham and Sale …
+## $ con_2015    &lt;dbl&gt; 50.592, 52.050, 52.994, 43.979, 60.788, 22.418, 52.454, 2…
+## $ lab_2015    &lt;dbl&gt; 18.333, 22.369, 26.686, 34.781, 11.197, 41.022, 18.441, 4…
+## $ ld_2015     &lt;dbl&gt; 8.824, 3.367, 8.383, 2.975, 7.192, 14.828, 5.984, 2.423, …
+## $ ukip_2015   &lt;dbl&gt; 17.867, 19.624, 8.011, 15.887, 14.438, 21.409, 18.821, 21…
+## $ leave_share &lt;dbl&gt; 57.89777, 67.79635, 38.58780, 65.29912, 49.70111, 70.4728…
+## $ born_in_uk  &lt;dbl&gt; 83.10464, 96.12207, 90.48566, 97.30437, 93.33793, 96.9621…
+## $ male        &lt;dbl&gt; 49.89896, 48.92951, 48.90621, 49.21657, 48.00189, 49.1718…
+## $ unemployed  &lt;dbl&gt; 3.637000, 4.553607, 3.039963, 4.261173, 2.468100, 4.74273…
+## $ degree      &lt;dbl&gt; 13.870661, 9.974114, 28.600135, 9.336294, 18.775591, 6.08…
+## $ age_18to24  &lt;dbl&gt; 9.406093, 7.325850, 6.437453, 7.747801, 5.734730, 8.20986…</code></pre>
+<p>Our main outcome variable is leave_share, which is the percent of votes cast in favour of Brexit, or leaving the EU. Each row is a UK parliament constituency</p>
+<p>To get a sense of the spread of the data, I plotted a histogram and a density plot of the leave share in all constituencies.</p>
+<pre class="r"><code>ggplot(brexit_results, aes(x = leave_share)) +
+  geom_histogram(binwidth = 2.5) + 
+  labs(title = &quot;Constituencies by Leave Share&quot;, subtitle = &quot;Histogram&quot;, x = &quot;Leave Share&quot;, y = &quot;Number of Constituencies&quot;)</code></pre>
+<p><img src="/blogs/Brexit_files/figure-html/brexit_histogram-1.png" width="672" /></p>
+<pre class="r"><code>ggplot(brexit_results, aes(x = leave_share)) +
+  geom_density() + 
+  labs(title = &quot;Constituencies by Leave Share&quot;, subtitle = &quot;Density Plot&quot;, x = &quot;Leave Share&quot;, y = &quot;Density&quot;)</code></pre>
+<p><img src="/blogs/Brexit_files/figure-html/brexit_histogram-2.png" width="672" /></p>
+<p>One common explanation for the Brexit outcome was fear of immigration and opposition to the EU’s more open border policy. I can check the relationship between the proportion of native born residents, born_in_uk, in a constituency and its leave_share. To do this, I get the correlation between the two variables</p>
+<pre class="r"><code>brexit_results %&gt;% 
+  select(leave_share, born_in_uk) %&gt;% 
+  cor()</code></pre>
+<pre><code>##             leave_share born_in_uk
+## leave_share   1.0000000  0.4934295
+## born_in_uk    0.4934295  1.0000000</code></pre>
+<p>The correlation is almost 0.5, which shows that the two variables are positively correlated.</p>
+<p>I can also create a scatterplot between these two variables using geom_point. I also added the best fit line, using geom_smooth(method = “lm”).</p>
+<pre class="r"><code>ggplot(brexit_results, aes(x = born_in_uk, y = leave_share)) +
+  geom_point(alpha=0.3) +
+  geom_smooth(method = &quot;lm&quot;) +
+  theme_bw() + labs(title = &quot;Native Britons Fuel Brexit&quot;, subtitle = &quot;Share Born in UK versus Leave Share&quot;, x = &quot;Share Born in UK&quot;, y = &quot;Leave Share&quot;)</code></pre>
+<pre><code>## `geom_smooth()` using formula &#39;y ~ x&#39;</code></pre>
+<p><img src="/blogs/Brexit_files/figure-html/brexit_immigration_plot-1.png" width="672" /></p>
+<p>Most interesting to me is the number of constituencies in the block with more than 95% native Britons that did not provide a majority of their votes to leave. While still clearly outnumbered by those heavily native constituencies voting leave, the share that voted to remain is certainly significant. An interesting inclusion to the data would be information of income or level of education, both of which may help predict the way that constituencies voted. Furthermore, much like in Task 2 where we colored the data by country, coloring by region could provide some intriguing insights, especially if leave voters are concentrated in post-industrial regions and remain voters in the prosperous Southeast and Scotland. A final note is the absence of any constituencies where the majority of residents are native born and the majority of votes went for leave, located in the top left corner of the plot. This tends to imply that non-native residents are much easier to predict the voting patterns of than native residents, as almost every data point falls below the point where leave share is equal to native born share.</p>

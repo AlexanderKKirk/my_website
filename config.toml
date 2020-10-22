@@ -94,13 +94,13 @@ disqusShortname = ""
     [[params.tiles.showcase]]
       title = "Gapminder"
       subtitle = "Exploring GDP and Life Expectancy"
-      image = "pic01.jpg"
+      image = "Gapminder.jpg"
       url = "blogs/Gapminder"
 
     [[params.tiles.showcase]]
       title = "Brexit"
       subtitle = "Predicting Leave Share with Demographics"
-      image = "pic02.jpg"
+      image = "Brexit.jpg"
       url = "blogs/Brexit"
 
     [[params.tiles.showcase]]

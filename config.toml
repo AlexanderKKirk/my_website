@@ -104,24 +104,24 @@ disqusShortname = ""
       url = "blogs/Brexit"
 
     [[params.tiles.showcase]]
-#      title = "Magna"
-#      subtitle = "Lorem Etiam Nullam"
-#      image = "pic03.jpg"
-#      url = "blogs/magna"
+      title = "Alcohol Consumption"
+      subtitle = "Where do people drink the most alcohol?"
+      image = "Alcohol.jpg"
+      url = "blogs/Alcohol"
 
     [[params.tiles.showcase]]
-#      title = "Ipsum"
-#      subtitle = "Nisl Sed Aliquam"
-#      image = "pic04.jpg"
-#      url = "blogs/ipsum"
+      title = "Equity returns"
+      subtitle = "Exploring the S&P 500 and DJIA"
+      image = "Stocks.jpg"
+      url = "blogs/Stocks"
 
-    [[params.tiles.showcase]]
+#    [[params.tiles.showcase]]
 #      title = "Consequat"
 #      subtitle = "Ipsum Dolor Sit Amet"
 #      image = "pic05.jpg"
 #      url = "blogs/ipsum"
 
-    [[params.tiles.showcase]]
+#    [[params.tiles.showcase]]
 #      title = "Etiam"
 #      subtitle = "Feugiat Amet Tempus"
 #      image = "pic06.jpg"

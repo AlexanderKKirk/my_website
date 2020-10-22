@@ -1,0 +1,200 @@
+---
+categories:
+- ""
+- ""
+date: "2017-10-31T22:26:09-05:00"
+description: "Predicting Leave Share with Demographics"
+draft: false
+image: Brexit.jpg
+keywords: ""
+slug: Brexit
+title: Brexit
+---
+
+
+
+<div id="where-do-people-drink-the-most-beer-wine-and-spirits" class="section level1">
+<h1>Where Do People Drink The Most Beer, Wine And Spirits?</h1>
+<pre class="r"><code>library(fivethirtyeight)
+data(drinks)</code></pre>
+<p>The drinks data has 1 character variable and 4 numeric variables and there are no missing values we should worry about.</p>
+<pre class="r"><code>skim(drinks)</code></pre>
+<table>
+<caption>(#tab:glimpse_skim_data)Data summary</caption>
+<tbody>
+<tr class="odd">
+<td align="left">Name</td>
+<td align="left">drinks</td>
+</tr>
+<tr class="even">
+<td align="left">Number of rows</td>
+<td align="left">193</td>
+</tr>
+<tr class="odd">
+<td align="left">Number of columns</td>
+<td align="left">5</td>
+</tr>
+<tr class="even">
+<td align="left">_______________________</td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">Column type frequency:</td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">character</td>
+<td align="left">1</td>
+</tr>
+<tr class="odd">
+<td align="left">numeric</td>
+<td align="left">4</td>
+</tr>
+<tr class="even">
+<td align="left">________________________</td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">Group variables</td>
+<td align="left">None</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Variable type: character</strong></p>
+<table>
+<thead>
+<tr class="header">
+<th align="left">skim_variable</th>
+<th align="right">n_missing</th>
+<th align="right">complete_rate</th>
+<th align="right">min</th>
+<th align="right">max</th>
+<th align="right">empty</th>
+<th align="right">n_unique</th>
+<th align="right">whitespace</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">country</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">3</td>
+<td align="right">28</td>
+<td align="right">0</td>
+<td align="right">193</td>
+<td align="right">0</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Variable type: numeric</strong></p>
+<table>
+<thead>
+<tr class="header">
+<th align="left">skim_variable</th>
+<th align="right">n_missing</th>
+<th align="right">complete_rate</th>
+<th align="right">mean</th>
+<th align="right">sd</th>
+<th align="right">p0</th>
+<th align="right">p25</th>
+<th align="right">p50</th>
+<th align="right">p75</th>
+<th align="right">p100</th>
+<th align="left">hist</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">beer_servings</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">106.16</td>
+<td align="right">101.14</td>
+<td align="right">0</td>
+<td align="right">20.0</td>
+<td align="right">76.0</td>
+<td align="right">188.0</td>
+<td align="right">376.0</td>
+<td align="left">▇▃▂▂▁</td>
+</tr>
+<tr class="even">
+<td align="left">spirit_servings</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">80.99</td>
+<td align="right">88.28</td>
+<td align="right">0</td>
+<td align="right">4.0</td>
+<td align="right">56.0</td>
+<td align="right">128.0</td>
+<td align="right">438.0</td>
+<td align="left">▇▃▂▁▁</td>
+</tr>
+<tr class="odd">
+<td align="left">wine_servings</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">49.45</td>
+<td align="right">79.70</td>
+<td align="right">0</td>
+<td align="right">1.0</td>
+<td align="right">8.0</td>
+<td align="right">59.0</td>
+<td align="right">370.0</td>
+<td align="left">▇▁▁▁▁</td>
+</tr>
+<tr class="even">
+<td align="left">total_litres_of_pure_alcohol</td>
+<td align="right">0</td>
+<td align="right">1</td>
+<td align="right">4.72</td>
+<td align="right">3.77</td>
+<td align="right">0</td>
+<td align="right">1.3</td>
+<td align="right">4.2</td>
+<td align="right">7.2</td>
+<td align="right">14.4</td>
+<td align="left">▇▃▅▃▁</td>
+</tr>
+</tbody>
+</table>
+<p>Below is a plot of the top 25 beer consuming countries.</p>
+<pre class="r"><code>drinks_beer &lt;- drinks %&gt;% 
+  arrange(desc(beer_servings)) %&gt;% 
+  head(25)
+ggplot(drinks_beer, aes(y = reorder(country, beer_servings), x = beer_servings)) + 
+  geom_col() + 
+  labs(title = &quot;Global Beer Consumption&quot;, 
+       y = &quot;&quot;,
+       x = &quot;Beer Servings&quot;,
+       caption = &quot;Source: FiveThirtyEight&quot;) +
+  theme_economist()</code></pre>
+<p><img src="./Alcohol_files/figure-html/beer_plot-1.png" width="672" />
+Next is a plot that shows the top 25 wine consuming countries.</p>
+<pre class="r"><code>drinks_wine &lt;- drinks %&gt;% 
+  arrange(desc(wine_servings)) %&gt;% 
+  head(25)
+ggplot(drinks_wine, aes(y = reorder(country, wine_servings), x = wine_servings)) + 
+  geom_col() + 
+  labs(title = &quot;Global Wine Consumption&quot;, 
+       y = &quot;&quot;,
+       x = &quot;Wine Servings&quot;,
+       caption = &quot;Source: FiveThirtyEight&quot;) +
+  theme_economist()</code></pre>
+<p><img src="./Alcohol_files/figure-html/wine_plot-1.png" width="672" />
+Finally, a plot that shows the top 25 spirit consuming countries.</p>
+<pre class="r"><code>drinks_spirit &lt;- drinks %&gt;% 
+  arrange(desc(spirit_servings)) %&gt;% 
+  head(25)
+ggplot(drinks_spirit, aes(y = reorder(country, spirit_servings), x = spirit_servings)) + 
+  geom_col() + 
+  labs(title = &quot;Global Spirit Consumption&quot;, 
+       y = &quot;&quot;,
+       x = &quot;Spirit Servings&quot;,
+       caption = &quot;Source: FiveThirtyEight&quot;) +
+  theme_economist()</code></pre>
+<p><img src="./Alcohol_files/figure-html/spirit_plot-1.png" width="672" />
+Across the board, there appears to be a strong cultural bias to the types of alcohol that countries consume. For example, Germany is fourth on the chart for global annual beer consumption per person and France tops the wine consumption chart. Furthermore, particularly for beer and spirit consumption, countries that are culturally tied through history have similar consumption patterns. Namibia tops the chart for beer consumption, likely due to its status as a former German colony. A similar pattern exists on the spirits chart as well. Many of the countries in the former Soviet Union and Eastern Bloc appear on that chart, likely due to the common consumption of vodka.</p>
+<p>Contrary to the beer and spirit categories, however, wine consumption is much less tied to shared cultural history and seems more reliant on shared geography and geographic proximity. Because wine is an alcoholic beverage that requires grapes grown in specific climates, it is not as easy to produce across the world. Therefore, the consumption of wine is heavily concentrated in Europe and thus close to the wine producing regions of France, Italy, and Portugal.</p>
+</div>

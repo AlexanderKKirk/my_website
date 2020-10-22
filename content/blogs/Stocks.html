@@ -1,0 +1,143 @@
+---
+title: "Equity Returns"
+date: '2017-10-31T22:26:09-05:00'
+description: Exploring the S&P 500 and DJIA
+draft: no
+image: Stocks.jpg
+keywords: ''
+slug: Stocks
+categories:
+- ''
+- ''
+---
+
+
+
+<p>We will use the tidyquant package to download historical data of stock prices, calculate returns, and examine the distribution of returns.</p>
+<p>We must first identify which stocks we want to download data for, and for this we must know their ticker symbol; Apple is known as AAPL, Microsoft as MSFT, McDonald’s as MCD, etc. The file nyse.csv contains 508 stocks listed on the NYSE, their ticker symbol, name, the IPO (Initial Public Offering) year, and the sector and industry the company is in.</p>
+<pre class="r"><code>nyse &lt;- read_csv(here::here(&quot;data&quot;,&quot;nyse.csv&quot;))</code></pre>
+<p>Below is a table and a bar plot that shows the number of companies per sector, in descending order</p>
+<pre class="r"><code>nyse_sector &lt;- nyse %&gt;% 
+  group_by(sector) %&gt;% 
+  summarise(sector_count = count(sector)) %&gt;% 
+  arrange(desc(sector_count))</code></pre>
+<pre><code>## `summarise()` ungrouping output (override with `.groups` argument)</code></pre>
+<pre class="r"><code>nyse_sector</code></pre>
+<pre><code>## # A tibble: 12 x 2
+##    sector                sector_count
+##    &lt;chr&gt;                        &lt;int&gt;
+##  1 Finance                         97
+##  2 Consumer Services               79
+##  3 Public Utilities                60
+##  4 Capital Goods                   45
+##  5 Health Care                     45
+##  6 Energy                          42
+##  7 Technology                      40
+##  8 Basic Industries                39
+##  9 Consumer Non-Durables           31
+## 10 Miscellaneous                   12
+## 11 Transportation                  10
+## 12 Consumer Durables                8</code></pre>
+<pre class="r"><code>ggplot(nyse_sector, aes(x = sector_count, y = reorder(sector, sector_count))) +
+      geom_col() + 
+  labs(title = &quot;S&amp;P 500 Sector Representation&quot;, y = &quot;&quot;, x = &quot;Companies&quot;, caption = &quot;Source: NYSE&quot;) +
+  theme_bw()</code></pre>
+<p><img src="/blogs/Stocks_files/figure-html/companies_per_sector-1.png" width="672" /></p>
+<p>Next, let’s choose the <a href="https://en.wikipedia.org/wiki/Dow_Jones_Industrial_Average">Dow Jones Industrial Average (DJIA)</a> stocks and their ticker symbols and download some data. Besides the thirty stocks that make up the DJIA, we will also add <code>SPY</code> which is an SP500 ETF (Exchange Traded Fund).</p>
+<pre class="r"><code>djia_url &lt;- &quot;https://en.wikipedia.org/wiki/Dow_Jones_Industrial_Average&quot;
+tables &lt;- djia_url %&gt;% 
+  read_html() %&gt;% 
+  html_nodes(css=&quot;table&quot;)
+djia &lt;- map(tables, . %&gt;% 
+               html_table(fill=TRUE)%&gt;% 
+               clean_names())
+table1 &lt;- djia[[2]] %&gt;%
+  mutate(date_added = ymd(date_added),
+         ticker = ifelse(str_detect(symbol, &quot;NYSE*&quot;),
+                          str_sub(symbol,7,11),
+                          symbol))
+tickers &lt;- table1 %&gt;% 
+  select(ticker) %&gt;% 
+  pull() %&gt;%
+  c(&quot;SPY&quot;)</code></pre>
+<pre class="r"><code>myStocks &lt;- tickers %&gt;% 
+  tq_get(get  = &quot;stock.prices&quot;,
+         from = &quot;2000-01-01&quot;,
+         to   = &quot;2020-08-31&quot;) %&gt;%
+  group_by(symbol) 
+glimpse(myStocks)</code></pre>
+<pre><code>## Rows: 153,121
+## Columns: 8
+## Groups: symbol [31]
+## $ symbol   &lt;chr&gt; &quot;MMM&quot;, &quot;MMM&quot;, &quot;MMM&quot;, &quot;MMM&quot;, &quot;MMM&quot;, &quot;MMM&quot;, &quot;MMM&quot;, &quot;MMM&quot;, &quot;MMM…
+## $ date     &lt;date&gt; 2000-01-03, 2000-01-04, 2000-01-05, 2000-01-06, 2000-01-07,…
+## $ open     &lt;dbl&gt; 48.03125, 46.43750, 45.56250, 47.15625, 50.56250, 50.21875, …
+## $ high     &lt;dbl&gt; 48.25000, 47.40625, 48.12500, 51.25000, 51.90625, 51.75000, …
+## $ low      &lt;dbl&gt; 47.03125, 45.31250, 45.56250, 47.15625, 49.96875, 50.00000, …
+## $ close    &lt;dbl&gt; 47.18750, 45.31250, 46.62500, 50.37500, 51.37500, 51.12500, …
+## $ volume   &lt;dbl&gt; 2173400, 2713800, 3699400, 5975800, 4101200, 3863800, 235760…
+## $ adjusted &lt;dbl&gt; 28.05650, 26.94168, 27.72205, 29.95170, 30.54629, 30.39765, …</code></pre>
+<p>Financial performance analysis depend on returns; If I buy a stock today for $100 and I sell it tomorrow for $101.75, my one-day return, assuming no transaction costs, is 1.75%. So given the adjusted closing prices, our first step is to calculate daily and monthly returns.</p>
+<pre class="r"><code>myStocks_returns_daily &lt;- myStocks %&gt;%
+  tq_transmute(select     = adjusted, 
+               mutate_fun = periodReturn, 
+               period     = &quot;daily&quot;, 
+               type       = &quot;log&quot;,
+               col_rename = &quot;daily_returns&quot;,
+               cols = c(nested.col))  
+myStocks_returns_monthly &lt;- myStocks %&gt;%
+  tq_transmute(select     = adjusted, 
+               mutate_fun = periodReturn, 
+               period     = &quot;monthly&quot;, 
+               type       = &quot;arithmetic&quot;,
+               col_rename = &quot;monthly_returns&quot;,
+               cols = c(nested.col)) 
+myStocks_returns_annual &lt;- myStocks %&gt;%
+  group_by(symbol) %&gt;%
+  tq_transmute(select     = adjusted, 
+               mutate_fun = periodReturn, 
+               period     = &quot;yearly&quot;, 
+               type       = &quot;arithmetic&quot;,
+               col_rename = &quot;yearly_returns&quot;,
+               cols = c(nested.col))</code></pre>
+<p>Next is a data frame summarizing monthly returns since 2017-01-01 for each of the stocks and SPY, comprised of min, max, median, mean, and SD.</p>
+<pre class="r"><code>djia_2017 &lt;- myStocks_returns_monthly %&gt;% 
+  filter(date &gt;= &quot;2017-01-01&quot;) %&gt;% 
+  group_by(symbol) %&gt;% 
+  summarise(min = min(monthly_returns), max = max(monthly_returns), median = median(monthly_returns), avg = mean(monthly_returns), std_dev = STDEV(monthly_returns))</code></pre>
+<pre><code>## `summarise()` ungrouping output (override with `.groups` argument)</code></pre>
+<pre class="r"><code>djia_2017</code></pre>
+<pre><code>## # A tibble: 31 x 6
+##    symbol    min    max   median       avg std_dev
+##    &lt;chr&gt;   &lt;dbl&gt;  &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt;
+##  1 AAPL   -0.181 0.200   0.0513   0.0387    0.0873
+##  2 AMGN   -0.104 0.180   0.0235   0.0171    0.0664
+##  3 AXP    -0.221 0.0988  0.0150   0.0109    0.0639
+##  4 BA     -0.458 0.257   0.0250   0.0124    0.120 
+##  5 CAT    -0.199 0.138   0.0318   0.0151    0.0742
+##  6 CRM    -0.155 0.391   0.0403   0.0350    0.0850
+##  7 CSCO   -0.155 0.130   0.0185   0.0125    0.0673
+##  8 CVX    -0.224 0.270   0.00173 -0.000926  0.0748
+##  9 DIS    -0.179 0.234  -0.00208  0.00967   0.0750
+## 10 DOW    -0.276 0.255   0.0456   0.00898   0.128 
+## # … with 21 more rows</code></pre>
+<p>Here is a series of density plots broken down by each of the stocks in the DJIA.</p>
+<pre class="r"><code>plot_returns &lt;- ggplot(myStocks_returns_monthly, aes(x=monthly_returns)) + 
+  geom_density() +
+  labs(title = &quot;Distribution of Monthly Returns&quot;, x = &quot;Monthly Return&quot;, y = &quot;&quot;, caption = &quot;Source: NYSE&quot;) +
+  facet_wrap(&quot;symbol&quot;) + 
+  theme_bw()
+plot_returns  </code></pre>
+<p><img src="/blogs/Stocks_files/figure-html/density_monthly_returns-1.png" width="672" /></p>
+<p>Regarding the plots, we can see that returns generally range between +/-25%, being highly concentrated around a 0% return. The riskiest stock in the DJIA appears to be Dow Inc. due to its higher standard deviation, although that may be due to its existence as an independent company commencing only in March 2019. The least risky “stock” is SPY, the S&amp;P 500 index fund. This is no surprise, as it generally represents a very diversified basket of individual companies.</p>
+<p>Finally, below is a plot that shows the expected monthly return (mean) of a stock on the Y axis and the risk (standard deviation) on the X-axis.</p>
+<pre class="r"><code>plot_expected &lt;- ggplot(djia_2017, aes(x = std_dev,y = avg, label = symbol)) + 
+  geom_point() + 
+  labs(title = &quot;Risk and Monthly Returns&quot;, x = &quot;Risk&quot;, y = &quot;Expected monthly return&quot;, caption = &quot;Source: NYSE&quot;) +
+  ggrepel::geom_text_repel() + 
+  geom_smooth(method = &quot;lm&quot;) +
+  theme_bw()
+plot_expected</code></pre>
+<pre><code>## `geom_smooth()` using formula &#39;y ~ x&#39;</code></pre>
+<p><img src="/blogs/Stocks_files/figure-html/risk_return_plot-1.png" width="672" /></p>
+<p>While there is certainly not a strong, positive linear relationship between riskiness and returns, possibly due to the DJIA being a rather small dataset, there are two stocks, in particular, that should have a higher expected return based on their riskiness. The Boeing Company and Dow Inc. should have higher returns for how risky they appear to be in this dataset, but there are rather simple explanations for both. Dow Inc., as discussed above, has only been an independent company since March 2019, thus limiting the number of months of returns that are available and driving up its standard deviation. The Boeing Company has seen a rather high-profile scandal in the past two years result in a dramatic drop in its stock price, dragging down its monthly returns over the period in question.</p>

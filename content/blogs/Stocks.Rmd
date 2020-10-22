@@ -1,14 +1,14 @@
 ---
-categories:
-- ""
-- ""
-date: "2017-10-31T22:26:09-05:00"
-description: "Exploring the S&P 500 and DJIA"
-draft: false
+title: "Equity Returns"
+date: '2017-10-31T22:26:09-05:00'
+description: Exploring the S&P 500 and DJIA
+draft: no
 image: Stocks.jpg
-keywords: ""
+keywords: ''
 slug: Stocks
-title: Equity Returns
+categories:
+- ''
+- ''
 ---
 ```{r load-libraries, warning=FALSE, message=FALSE, echo=FALSE}
 library(tidyverse)
@@ -39,13 +39,14 @@ Below is a table and a bar plot that shows the number of companies per sector, i
 nyse_sector <- nyse %>% 
   group_by(sector) %>% 
   summarise(sector_count = count(sector)) %>% 
-  arrange(desc(sector_count)) %>% 
+  arrange(desc(sector_count))
 nyse_sector
 ggplot(nyse_sector, aes(x = sector_count, y = reorder(sector, sector_count))) +
       geom_col() + 
   labs(title = "S&P 500 Sector Representation", y = "", x = "Companies", caption = "Source: NYSE") +
   theme_bw()
 ```
+
 Next, let's choose the [Dow Jones Industrial Average (DJIA)](https://en.wikipedia.org/wiki/Dow_Jones_Industrial_Average) stocks and their ticker symbols and download some data. Besides the thirty stocks that make up the DJIA, we will also add `SPY` which is an SP500 ETF (Exchange Traded Fund).
 ```{r, tickers_from_wikipedia}
 djia_url <- "https://en.wikipedia.org/wiki/Dow_Jones_Industrial_Average"
@@ -115,6 +116,7 @@ plot_returns <- ggplot(myStocks_returns_monthly, aes(x=monthly_returns)) +
   theme_bw()
 plot_returns  
 ```
+
 Regarding the plots, we can see that returns generally range between +/-25%, being highly concentrated around a 0% return. The riskiest stock in the DJIA appears to be Dow Inc. due to its higher standard deviation, although that may be due to its existence as an independent company commencing only in March 2019. The least risky "stock" is SPY, the S&P 500 index fund. This is no surprise, as it generally represents a very diversified basket of individual companies.
 
 Finally, below is a plot that shows the expected monthly return (mean) of a stock on the Y axis and the risk (standard deviation) on the X-axis. 
@@ -127,4 +129,5 @@ plot_expected <- ggplot(djia_2017, aes(x = std_dev,y = avg, label = symbol)) +
   theme_bw()
 plot_expected
 ```
+
 While there is certainly not a strong, positive linear relationship between riskiness and returns, possibly due to the DJIA being a rather small dataset, there are two stocks, in particular, that should have a higher expected return based on their riskiness. The Boeing Company and Dow Inc. should have higher returns for how risky they appear to be in this dataset, but there are rather simple explanations for both. Dow Inc., as discussed above, has only been an independent company since March 2019, thus limiting the number of months of returns that are available and driving up its standard deviation. The Boeing Company has seen a rather high-profile scandal in the past two years result in a dramatic drop in its stock price, dragging down its monthly returns over the period in question. 

@@ -168,8 +168,8 @@ ggplot(drinks_beer, aes(y = reorder(country, beer_servings), x = beer_servings))
        x = &quot;Beer Servings&quot;,
        caption = &quot;Source: FiveThirtyEight&quot;) +
   theme_bw()</code></pre>
-<p><img src="/blogs/Alcohol_files/figure-html/beer_plot-1.png" width="672" />
-Next is a plot that shows the top 25 wine consuming countries.</p>
+<p><img src="/blogs/Alcohol_files/figure-html/beer_plot-1.png" width="672" /></p>
+<p>Next is a plot that shows the top 25 wine consuming countries.</p>
 <pre class="r"><code>drinks_wine &lt;- drinks %&gt;% 
   arrange(desc(wine_servings)) %&gt;% 
   head(25)
@@ -180,8 +180,8 @@ ggplot(drinks_wine, aes(y = reorder(country, wine_servings), x = wine_servings))
        x = &quot;Wine Servings&quot;,
        caption = &quot;Source: FiveThirtyEight&quot;) +
   theme_bw()</code></pre>
-<p><img src="/blogs/Alcohol_files/figure-html/wine_plot-1.png" width="672" />
-Finally, a plot that shows the top 25 spirit consuming countries.</p>
+<p><img src="/blogs/Alcohol_files/figure-html/wine_plot-1.png" width="672" /></p>
+<p>Finally, a plot that shows the top 25 spirit consuming countries.</p>
 <pre class="r"><code>drinks_spirit &lt;- drinks %&gt;% 
   arrange(desc(spirit_servings)) %&gt;% 
   head(25)
@@ -192,6 +192,6 @@ ggplot(drinks_spirit, aes(y = reorder(country, spirit_servings), x = spirit_serv
        x = &quot;Spirit Servings&quot;,
        caption = &quot;Source: FiveThirtyEight&quot;) +
   theme_bw()</code></pre>
-<p><img src="/blogs/Alcohol_files/figure-html/spirit_plot-1.png" width="672" />
-Across the board, there appears to be a strong cultural bias to the types of alcohol that countries consume. For example, Germany is fourth on the chart for global annual beer consumption per person and France tops the wine consumption chart. Furthermore, particularly for beer and spirit consumption, countries that are culturally tied through history have similar consumption patterns. Namibia tops the chart for beer consumption, likely due to its status as a former German colony. A similar pattern exists on the spirits chart as well. Many of the countries in the former Soviet Union and Eastern Bloc appear on that chart, likely due to the common consumption of vodka.</p>
+<p><img src="/blogs/Alcohol_files/figure-html/spirit_plot-1.png" width="672" /></p>
+<p>Across the board, there appears to be a strong cultural bias to the types of alcohol that countries consume. For example, Germany is fourth on the chart for global annual beer consumption per person and France tops the wine consumption chart. Furthermore, particularly for beer and spirit consumption, countries that are culturally tied through history have similar consumption patterns. Namibia tops the chart for beer consumption, likely due to its status as a former German colony. A similar pattern exists on the spirits chart as well. Many of the countries in the former Soviet Union and Eastern Bloc appear on that chart, likely due to the common consumption of vodka.</p>
 <p>Contrary to the beer and spirit categories, however, wine consumption is much less tied to shared cultural history and seems more reliant on shared geography and geographic proximity. Because wine is an alcoholic beverage that requires grapes grown in specific climates, it is not as easy to produce across the world. Therefore, the consumption of wine is heavily concentrated in Europe and thus close to the wine producing regions of France, Italy, and Portugal.</p>
